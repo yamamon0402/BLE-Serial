@@ -14,11 +14,14 @@ class TopViewController: UIViewController , UITableViewDelegate , UITableViewDat
     @IBOutlet private weak var indicator : UIActivityIndicatorView!
     @IBOutlet private weak var tableView : UITableView!
     
+    let connectID = "569a1101-b87f-490c-92cb-11ba5ea5167c"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         var manager:BLEManager = BLEManager.sharedInstance
         
         manager.discoverBlock = {
+            // scanは別スレッドで動いているためreload処理はメインスレッドへの移動処理を追加
             self.dispatch_async_main{
                 self.tableView.reloadData()
             }
@@ -87,7 +90,14 @@ class TopViewController: UIViewController , UITableViewDelegate , UITableViewDat
     // MARK: - TableViewDelegate -
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
     {
+        var storyboard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
         
+        var manager:BLEManager = BLEManager.sharedInstance
+        let pUUID = (manager.devices[indexPath.row] as BLEDevice).peripheral.identifier.UUIDString
+        manager.connect(connectID)
+        var vc : ServiceTableViewController = storyboard.instantiateViewControllerWithIdentifier("Service") as ServiceTableViewController
+        vc.device = (manager.devices[indexPath.row] as BLEDevice)
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     

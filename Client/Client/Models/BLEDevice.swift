@@ -9,12 +9,22 @@
 import UIKit
 import CoreBluetooth
 
+enum STATE {
+    case disconnect
+    case connect
+    case Other
+}
+
 class BLEDevice: NSObject , CBPeripheralDelegate {
     
     var localName : NSString?
     var txPowerLevel : NSNumber?
     var serviceUUIDs : NSArray?
     var isConnectable : Bool?
+    
+    var discoverServiceBlock: () -> Void = {}
+    
+    var state : STATE = .disconnect
     
     var peripheral : CBPeripheral!
     
@@ -32,7 +42,27 @@ class BLEDevice: NSObject , CBPeripheralDelegate {
         RSSI = rssi.integerValue
         println("\(advertismentData)")
         self.peripheral = peripheral
+        self.peripheral.delegate = self
+    }
+    
+    // MARK: - CBPeripheralDelegate -
+    func peripheral(peripheral: CBPeripheral!, didDiscoverServices error: NSError!) {
+        self.peripheral = peripheral;
+        for service in self.peripheral.services	{
+            self.peripheral.discoverCharacteristics(nil, forService: service as CBService)
+            discoverServiceBlock()
+        }
+    }
+    
+    func peripheral(peripheral: CBPeripheral!, didUpdateValueForCharacteristic characteristic: CBCharacteristic!, error: NSError!) {
         
     }
+    
+    /*
+    func getCharacteristic(serviceUUID : NSString , CharacteristicUUID : NSString) -> CBCharacteristic
+    {
+        return
+    }
+    */
     
 }

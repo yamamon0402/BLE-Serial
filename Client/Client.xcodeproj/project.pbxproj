@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		40137EA01A9B376B00BDDDF1 /* ServiceTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40137E9F1A9B376B00BDDDF1 /* ServiceTableViewController.swift */; };
+		40137EA21A9B382000BDDDF1 /* CharactaristicTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40137EA11A9B382000BDDDF1 /* CharactaristicTableViewController.swift */; };
 		408405C01A922E0D007AC873 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 408405BF1A922E0D007AC873 /* AppDelegate.swift */; };
 		408405C51A922E0D007AC873 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 408405C31A922E0D007AC873 /* Main.storyboard */; };
 		408405C71A922E0D007AC873 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 408405C61A922E0D007AC873 /* Images.xcassets */; };
@@ -30,6 +32,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		40137E9F1A9B376B00BDDDF1 /* ServiceTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ServiceTableViewController.swift; path = Controllers/ServiceTableViewController.swift; sourceTree = "<group>"; };
+		40137EA11A9B382000BDDDF1 /* CharactaristicTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CharactaristicTableViewController.swift; path = Controllers/CharactaristicTableViewController.swift; sourceTree = "<group>"; };
 		408405BA1A922E0D007AC873 /* Client.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Client.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		408405BE1A922E0D007AC873 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		408405BF1A922E0D007AC873 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -145,6 +149,8 @@
 			isa = PBXGroup;
 			children = (
 				408405E21A922E9D007AC873 /* TopViewController.swift */,
+				40137E9F1A9B376B00BDDDF1 /* ServiceTableViewController.swift */,
+				40137EA11A9B382000BDDDF1 /* CharactaristicTableViewController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -249,10 +255,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				40137EA01A9B376B00BDDDF1 /* ServiceTableViewController.swift in Sources */,
 				408405E31A922E9D007AC873 /* TopViewController.swift in Sources */,
 				408405E71A9237AF007AC873 /* BLEManager.swift in Sources */,
 				408405E51A922F3C007AC873 /* BLEDevice.swift in Sources */,
 				408405EB1A923C35007AC873 /* BLECommon.swift in Sources */,
+				40137EA21A9B382000BDDDF1 /* CharactaristicTableViewController.swift in Sources */,
 				408405C01A922E0D007AC873 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -445,6 +453,7 @@
 				408405DB1A922E0D007AC873 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		408405DC1A922E0D007AC873 /* Build configuration list for PBXNativeTarget "ClientTests" */ = {
 			isa = XCConfigurationList;
@@ -453,6 +462,7 @@
 				408405DE1A922E0D007AC873 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
