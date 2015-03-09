@@ -9,11 +9,7 @@
 import UIKit
 import CoreBluetooth
 
-enum STATE {
-    case disconnect
-    case connect
-    case Other
-}
+//CBPeripheralのラッパーかつ、デリゲートの受取場
 
 class BLEDevice: NSObject , CBPeripheralDelegate {
     
@@ -24,11 +20,71 @@ class BLEDevice: NSObject , CBPeripheralDelegate {
     
     var discoverServiceBlock: () -> Void = {}
     
-    var state : STATE = .disconnect
-    
     var peripheral : CBPeripheral!
     
-    var RSSI : Int!
+    var identifier : String!{
+        get{
+            if var peri:CBPeripheral = peripheral
+            {
+                return peri.identifier.UUIDString
+            }
+            else
+            {
+                return ""
+            }
+        }
+    }
+    var name : String!{
+        get{
+            if var peri:CBPeripheral = peripheral
+            {
+                return peri.name
+            }
+            else
+            {
+                return ""
+            }
+        }
+        set{
+            self.name = newValue
+        }
+    }
+    
+    
+    
+    var state :CBPeripheralState!{
+        get{
+            if var peri:CBPeripheral = peripheral
+            {
+                return peri.state
+            }
+            else
+            {
+                return CBPeripheralState.Disconnected
+            }
+        }
+        set{
+            self.state = newValue
+        }
+    }
+    
+    
+    var RSSI : Int!{
+        get{
+            if var peri:CBPeripheral = peripheral
+            {
+                return peri.RSSI.integerValue
+            }
+            else
+            {
+                return self.RSSI
+            }
+        }
+        set{
+            //self.RSSI = newValue
+        }
+    }
+    
     
     init(peripheral:CBPeripheral,advertismentData:NSDictionary,rssi:NSNumber)
     {

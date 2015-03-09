@@ -96,11 +96,11 @@ class BLEManager: NSObject,CBCentralManagerDelegate {
                 println("\(services) , \(uuid)")
                 if (services as NSArray).containsObject(CBUUID(string: uuid))
                 {
-                    (device as BLEDevice).state = .disconnect
                     centralManager.connectPeripheral((device as BLEDevice).peripheral, options: nil)
                     println("connect \(uuid)")
                     var counter = 0
-                    while (device as BLEDevice).state == .disconnect
+                    while (device as BLEDevice).state == CBPeripheralState.Connected ||
+                    (device as BLEDevice).state == CBPeripheralState.Connecting
                     {
                         NSRunLoop.currentRunLoop().runUntilDate(NSDate(timeIntervalSinceNow: 0.1))
                         if timeOutCount < counter
@@ -128,11 +128,11 @@ class BLEManager: NSObject,CBCentralManagerDelegate {
                 {
                     if (services as NSArray).containsObject(CBUUID(string: uuid))
                     {
-                        (device as BLEDevice).state = .disconnect
                         centralManager.connectPeripheral((device as BLEDevice).peripheral, options: nil)
                         
                         var counter = 0
-                        while (device as BLEDevice).state == .connect
+                        while (device as BLEDevice).state == CBPeripheralState.Connected ||
+                            (device as BLEDevice).state == CBPeripheralState.Connecting
                         {
                             NSRunLoop.currentRunLoop().runUntilDate(NSDate(timeIntervalSinceNow: 0.1))
                             if timeOutCount < counter
@@ -164,7 +164,17 @@ class BLEManager: NSObject,CBCentralManagerDelegate {
         if advertisementData["kCBAdvDataLocalName"] as? NSString != nil
         {
             var newDevice = BLEDevice(peripheral: peripheral, advertismentData: advertisementData, rssi: RSSI)
-            devices.addObject(newDevice)
+            var counter : Int = 0
+            for device in devices
+            {
+                if (device as BLEDevice).identifier == peripheral.identifier
+                {
+                    devices.removeObjectAtIndex(counter)
+                    break;
+                }
+                counter += 1
+            }
+            devices.insertObject(newDevice, atIndex: counter)
             discoverBlock()
         }
     }
@@ -180,15 +190,13 @@ class BLEManager: NSObject,CBCentralManagerDelegate {
         println("connect success")
         for device in devices
         {
-            //FIXME: IDとか持っていないみたいなので、とりあえずnameで同一を判定。
-            //多分これ、同じデバイスを近くで複数検知したとき、どっちと接続されたかわからない処理になっている。困った
-            if (device as BLEDevice).peripheral.name == peripheral.name
+            
+            if (device as BLEDevice).identifier == peripheral.identifier
             {
                 if (device as BLEDevice).peripheral.services == nil
                 {
                     (device as BLEDevice).peripheral.discoverServices(nil)
                 }
-                (device as BLEDevice).state = .connect
             }
         }
     }
