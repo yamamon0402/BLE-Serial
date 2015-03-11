@@ -46,7 +46,6 @@ class BLEDevice: NSObject , CBPeripheralDelegate {
             }
         }
         set{
-            self.name = newValue
         }
     }
     
@@ -64,7 +63,6 @@ class BLEDevice: NSObject , CBPeripheralDelegate {
             }
         }
         set{
-            self.state = newValue
         }
     }
     
