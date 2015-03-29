@@ -19,6 +19,7 @@
 		408405E71A9237AF007AC873 /* BLEManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 408405E61A9237AF007AC873 /* BLEManager.swift */; };
 		408405E91A9239A7007AC873 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 408405E81A9239A7007AC873 /* CoreBluetooth.framework */; };
 		408405EB1A923C35007AC873 /* BLECommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 408405EA1A923C35007AC873 /* BLECommon.swift */; };
+		40CFE0CF1AC064CF003A9C1D /* BLESerialCommunicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40CFE0CE1AC064CF003A9C1D /* BLESerialCommunicator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,7 @@
 		408405E61A9237AF007AC873 /* BLEManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BLEManager.swift; path = Models/BLEManager.swift; sourceTree = "<group>"; };
 		408405E81A9239A7007AC873 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		408405EA1A923C35007AC873 /* BLECommon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BLECommon.swift; path = Models/BLECommon.swift; sourceTree = "<group>"; };
+		40CFE0CE1AC064CF003A9C1D /* BLESerialCommunicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BLESerialCommunicator.swift; path = Models/BLESerialCommunicator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,6 +136,7 @@
 				408405E41A922F3C007AC873 /* BLEDevice.swift */,
 				408405E61A9237AF007AC873 /* BLEManager.swift */,
 				408405EA1A923C35007AC873 /* BLECommon.swift */,
+				40CFE0CE1AC064CF003A9C1D /* BLESerialCommunicator.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -257,6 +260,7 @@
 			files = (
 				40137EA01A9B376B00BDDDF1 /* ServiceTableViewController.swift in Sources */,
 				408405E31A922E9D007AC873 /* TopViewController.swift in Sources */,
+				40CFE0CF1AC064CF003A9C1D /* BLESerialCommunicator.swift in Sources */,
 				408405E71A9237AF007AC873 /* BLEManager.swift in Sources */,
 				408405E51A922F3C007AC873 /* BLEDevice.swift in Sources */,
 				408405EB1A923C35007AC873 /* BLECommon.swift in Sources */,

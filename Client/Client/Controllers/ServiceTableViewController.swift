@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreBluetooth
 
 class ServiceTableViewController: UITableViewController {
     
@@ -15,9 +16,9 @@ class ServiceTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        var sevices = device.peripheral.services
         
-        
-        device.discoverServiceBlock = {
+        device.discoverServiceBlock = {service in
             // scanは別スレッドで動いているためreload処理はメインスレッドへの移動処理を追加
             self.dispatch_async_main{
                 self.tableView.reloadData()
@@ -49,11 +50,12 @@ class ServiceTableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("CELL", forIndexPath: indexPath) as UITableViewCell
-
+        
         // Configure the cell...
         
-        cell.textLabel?.text = "aaa"
-        
+        cell.textLabel?.text = ""
+        var service : CBService = device.services.objectAtIndex(indexPath.row) as CBService
+        cell.textLabel?.text = service.UUID.UUIDString
         return cell
     }
     

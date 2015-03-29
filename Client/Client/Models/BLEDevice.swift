@@ -13,12 +13,18 @@ import CoreBluetooth
 
 class BLEDevice: NSObject , CBPeripheralDelegate {
     
+    // MARK: - API(property) -
     var localName : NSString?
     var txPowerLevel : NSNumber?
     var serviceUUIDs : NSArray?
     var isConnectable : Bool?
     
-    var discoverServiceBlock: () -> Void = {}
+    // サービスが見つかったクロージャー 何かの癖でblockと書いてしまう
+    var discoverServiceBlock: (CBService) -> Void = {service in}
+    var discoverCharactaristicBlock : (CBService) -> Void = {service in}
+    
+    // characteristicが更新されたクローじゃ
+    var updateCharacteristicBlock: (CBCharacteristic) -> Void = {Charactaristic in}
     
     var peripheral : CBPeripheral!
     
@@ -66,6 +72,21 @@ class BLEDevice: NSObject , CBPeripheralDelegate {
         }
     }
     
+    var services :NSArray!{
+        get{
+            if var peri:CBPeripheral = peripheral
+            {
+                return peri.services as NSArray
+            }
+            else
+            {
+                return NSArray.alloc()
+            }
+        }
+        set{
+        }
+    }
+    
     
     var RSSI : Int!{
         get{
@@ -103,20 +124,65 @@ class BLEDevice: NSObject , CBPeripheralDelegate {
     func peripheral(peripheral: CBPeripheral!, didDiscoverServices error: NSError!) {
         self.peripheral = peripheral;
         for service in self.peripheral.services	{
+            //サービスが見つかったらすぐにキャラクタリスティックも探す
             self.peripheral.discoverCharacteristics(nil, forService: service as CBService)
-            discoverServiceBlock()
+            
+            discoverServiceBlock(service as CBService)
         }
+        println("discover service")
+    }
+    
+    func peripheral(peripheral: CBPeripheral!, didDiscoverCharacteristicsForService service: CBService!, error: NSError!) {
+        discoverCharactaristicBlock(service)
     }
     
     func peripheral(peripheral: CBPeripheral!, didUpdateValueForCharacteristic characteristic: CBCharacteristic!, error: NSError!) {
-        
+        updateCharacteristicBlock(characteristic)
     }
     
-    /*
-    func getCharacteristic(serviceUUID : NSString , CharacteristicUUID : NSString) -> CBCharacteristic
+    // MARK: - API -
+    
+    // serviceのUUIDとcharacteristicsのUUIDから欲しいデータを取り出す。
+    // serviceはconnect済みであることが条件
+    func getCharacteristic(serviceUUID : NSString , CharacteristicUUID : NSString) -> CBCharacteristic?
     {
-        return
+        if state == CBPeripheralState.Connected
+        {
+            for service in services // 高速列挙でキャストする方法ってないのかな？勉強不足
+            {
+                if (service as CBService).UUID.UUIDString == serviceUUID
+                {
+                    for characteristic in (service as CBService).characteristics // 高速列挙でキャストする方法ってないのかな？
+                    {
+                        if (characteristic as CBCharacteristic).UUID.UUIDString == CharacteristicUUID
+                        {
+                            return characteristic as? CBCharacteristic;
+                        }
+                    }
+                }
+            }
+        }
+        return nil
     }
-    */
+    
+    func writeWithResponse(characteristic : CBCharacteristic , value : NSData)
+    {
+        peripheral.writeValue(value, forCharacteristic: characteristic, type: CBCharacteristicWriteType.WithResponse)
+    }
+    
+    func writeWithoutResponse(characteristic : CBCharacteristic , value : NSData)
+    {
+        peripheral.writeValue(value, forCharacteristic: characteristic, type: CBCharacteristicWriteType.WithoutResponse)
+    }
+    
+    func readRequest(characteristic : CBCharacteristic)
+    {
+        peripheral.readValueForCharacteristic(characteristic)
+    }
+    
+    func notifyRequest(characteristic : CBCharacteristic)
+    {
+        peripheral.setNotifyValue(true, forCharacteristic: characteristic)
+    }
     
 }

@@ -14,8 +14,7 @@ class BLEManager: NSObject,CBCentralManagerDelegate {
     var centralManager : CBCentralManager!
     var devices : NSMutableArray = NSMutableArray() // <BLEDevice>
     
-    var discoverBlock: () -> Void = {}
-    
+    var discoverBlock: (BLEDevice) -> Void = {device in}
     var isScannning : Bool = false
     
     class var sharedInstance : BLEManager {
@@ -59,6 +58,7 @@ class BLEManager: NSObject,CBCentralManagerDelegate {
             NSLog("%d",isScannning)
             return true
         }
+        println("miss scanDevices")
         return false
     }
     
@@ -99,8 +99,7 @@ class BLEManager: NSObject,CBCentralManagerDelegate {
                     centralManager.connectPeripheral((device as BLEDevice).peripheral, options: nil)
                     println("connect \(uuid)")
                     var counter = 0
-                    while (device as BLEDevice).state == CBPeripheralState.Connected ||
-                    (device as BLEDevice).state == CBPeripheralState.Connecting
+                    while (device as BLEDevice).state == CBPeripheralState.Disconnected
                     {
                         NSRunLoop.currentRunLoop().runUntilDate(NSDate(timeIntervalSinceNow: 0.1))
                         if timeOutCount < counter
@@ -159,7 +158,7 @@ class BLEManager: NSObject,CBCentralManagerDelegate {
     
     // scanを始めた後、ペリフェラルが見つかったら呼ばれるdelegate
     func centralManager(central: CBCentralManager!, didDiscoverPeripheral peripheral: CBPeripheral!, advertisementData: [NSObject : AnyObject]!, RSSI: NSNumber!) {
-        
+        println("didDiscoverPeripheral : \(peripheral)")
         //同じやつがなければ、追加する
         if advertisementData["kCBAdvDataLocalName"] as? NSString != nil
         {
@@ -167,15 +166,16 @@ class BLEManager: NSObject,CBCentralManagerDelegate {
             var counter : Int = 0
             for device in devices
             {
-                if (device as BLEDevice).identifier == peripheral.identifier
+                if (device as BLEDevice).identifier == peripheral.identifier.UUIDString
                 {
+                    // 同じidのが先にいたら、それを消して入れ替える
                     devices.removeObjectAtIndex(counter)
                     break;
                 }
                 counter += 1
             }
             devices.insertObject(newDevice, atIndex: counter)
-            discoverBlock()
+            discoverBlock(newDevice)
         }
     }
     
@@ -190,20 +190,20 @@ class BLEManager: NSObject,CBCentralManagerDelegate {
         println("connect success")
         for device in devices
         {
-            
-            if (device as BLEDevice).identifier == peripheral.identifier
+            if (device as BLEDevice).identifier == peripheral.identifier.UUIDString
             {
                 if (device as BLEDevice).peripheral.services == nil
                 {
-                    (device as BLEDevice).peripheral.discoverServices(nil)
+                    (device as BLEDevice).peripheral.discoverServices(nil) //connectされたら早速serviceを探索する
                 }
             }
         }
     }
     
-    
     func centralManager(central: CBCentralManager!, didFailToConnectPeripheral peripheral: CBPeripheral!, error: NSError!)
     {
         
     }
+    
+    
 }

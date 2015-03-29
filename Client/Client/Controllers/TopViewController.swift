@@ -18,22 +18,28 @@ class TopViewController: UIViewController , UITableViewDelegate , UITableViewDat
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        /*
         var manager:BLEManager = BLEManager.sharedInstance
         
-        manager.discoverBlock = {
+        manager.discoverBlock = {peripheral in
             // scanは別スレッドで動いているためreload処理はメインスレッドへの移動処理を追加
             self.dispatch_async_main{
                 self.tableView.reloadData()
             }
         }
+*/
+        var communicator : BLESerialCommunicator = BLESerialCommunicator.sharedInstance
+        communicator.connect()
         // Do any additional setup after loading the view, typically from a nib.
     }
     
     override func viewDidDisappear(animated: Bool) {
+        /*
         var manager:BLEManager = BLEManager.sharedInstance
         manager.stopScan()
         scanButton.setTitle("START", forState: UIControlState.Normal)
         indicator.stopAnimating()
+*/
     }
     
     deinit
@@ -83,7 +89,6 @@ class TopViewController: UIViewController , UITableViewDelegate , UITableViewDat
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var manager:BLEManager = BLEManager.sharedInstance
-        println("\(manager.devices.count)")
         return manager.devices.count
     }
     
