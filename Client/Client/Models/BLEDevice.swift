@@ -150,13 +150,17 @@ class BLEDevice: NSObject , CBPeripheralDelegate {
         {
             for service in services // 高速列挙でキャストする方法ってないのかな？勉強不足
             {
-                if (service as CBService).UUID.UUIDString == serviceUUID
+                println("getch:\((service as CBService).UUID.UUIDString) , \(serviceUUID) , ")
+                if (service as CBService).UUID.UUIDString.lowercaseString == serviceUUID
                 {
-                    for characteristic in (service as CBService).characteristics // 高速列挙でキャストする方法ってないのかな？
+                    if (service as CBService).characteristics != nil
                     {
-                        if (characteristic as CBCharacteristic).UUID.UUIDString == CharacteristicUUID
+                        for characteristic in (service as CBService).characteristics // 高速列挙でキャストする方法ってないのかな？
                         {
-                            return characteristic as? CBCharacteristic;
+                            if (characteristic as CBCharacteristic).UUID.UUIDString.lowercaseString == CharacteristicUUID
+                            {
+                                return characteristic as? CBCharacteristic;
+                            }
                         }
                     }
                 }

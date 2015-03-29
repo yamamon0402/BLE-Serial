@@ -46,12 +46,12 @@ class BLESerialCommunicator: NSObject {
                 manager.stopScan()
                 manager.connect(self.UUID_VSP_SERVICE)
                 
-                self.localDevice = (device as BLEDevice)
                 
                 (device as BLEDevice).discoverServiceBlock = {service in
                 }
                 
                 (device as BLEDevice).discoverCharactaristicBlock = {service in
+                    self.localDevice = (device as BLEDevice)
                     for ch in (service as CBService).characteristics
                     {
                         var tx : CBCharacteristic? = (device as BLEDevice).getCharacteristic(self.UUID_VSP_SERVICE, CharacteristicUUID: self.UUID_TX)
@@ -63,6 +63,7 @@ class BLESerialCommunicator: NSObject {
                 }
                 
                 (device as BLEDevice).updateCharacteristicBlock = { charactaristic in
+                    self.localDevice = (device as BLEDevice)
                     var rx : CBCharacteristic? = (device as BLEDevice).getCharacteristic(self.UUID_VSP_SERVICE, CharacteristicUUID: self.UUID_RX)
                     if charactaristic as CBCharacteristic == rx
                     {
@@ -72,10 +73,12 @@ class BLESerialCommunicator: NSObject {
                     var tx : CBCharacteristic? = (device as BLEDevice).getCharacteristic(self.UUID_VSP_SERVICE, CharacteristicUUID: self.UUID_TX)
                     if charactaristic as CBCharacteristic == tx
                     {
-                        
-                        var source : String = NSString(data:(tx?.value)! , encoding:NSUTF8StringEncoding)!
-                        println("\(source)")
-                        self.readBlock(source)
+                        if tx?.value != nil
+                        {
+                            var source : String = NSString(data:(tx?.value)! , encoding:NSUTF8StringEncoding)!
+                            println("\(source)")
+                            self.readBlock(source)
+                        }
                     }
                 }
             }
