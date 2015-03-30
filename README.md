@@ -48,6 +48,10 @@ communicator.write(string:String)
 > 引数stringを書き込む 256 byte制限
 >
 
-## License
+# 参考
+　
+- [BLE-Serial](http://www.robotsfx.com/robot/BLESerial.html)
+
+# License
  MIT license.
 
