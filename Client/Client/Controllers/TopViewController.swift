@@ -10,32 +10,18 @@ import UIKit
 
 class TopViewController: UIViewController{
     
-    @IBOutlet private weak var rightSlider : UISlider!
-    @IBOutlet private weak var leftSlider : UISlider!
-    
+    @IBOutlet private weak var countText: UILabel!
+    var counter = 0
     override func viewDidLoad() {
         super.viewDidLoad()
         var communicator : BLESerialCommunicator = BLESerialCommunicator.sharedInstance
-        communicator.connect()
+        
         
         communicator.readBlock = {string in
             self.dispatch_async_main
                 {
-                    let loc_string : NSString = string as NSString
-                    let searchRight : NSRange = loc_string.rangeOfString("r:")
-                    let searchLeft : NSRange = loc_string.rangeOfString(",l:")
-                    if(searchRight.location == NSNotFound || searchLeft.location == NSNotFound || searchRight.location != 0)
-                    {
-                        println("missData");
-                    }
-                    else
-                    {
-                        var r :NSString = loc_string.substringWithRange(NSMakeRange(searchRight.location + 2 , searchLeft.location - (searchRight.location + 2)))
-                        self.rightSlider.value = r.floatValue
-                        
-                        var l :NSString = loc_string.substringWithRange(NSMakeRange(searchLeft.location + 3 , loc_string.length - (searchLeft.location + 3)))
-                        self.leftSlider.value = l.floatValue
-                    }
+                    self.counter = self.counter + 1
+                    self.countText.text = "\(self.counter)"
             }
         }
     }
@@ -53,29 +39,24 @@ class TopViewController: UIViewController{
         // Dispose of any resources that can be recreated.
     }
     
-    @IBAction func prev(sender:AnyObject)
+    @IBAction func connect(sender:AnyObject)
     {
         var communicator : BLESerialCommunicator = BLESerialCommunicator.sharedInstance
-        communicator.write("a")
+        communicator.connect()
     }
     
-    @IBAction func back(sender:AnyObject)
+    @IBAction func disconnect(sender:AnyObject)
     {
         var communicator : BLESerialCommunicator = BLESerialCommunicator.sharedInstance
-        communicator.write("z")
+        communicator.disconnect()
     }
     
-    @IBAction func rotate(sender:AnyObject)
+    @IBAction func send(sender:AnyObject)
     {
         var communicator : BLESerialCommunicator = BLESerialCommunicator.sharedInstance
-        communicator.write("r")
+        communicator.write("aaa")
     }
     
-    @IBAction func stop(sender:AnyObject)
-    {
-        var communicator : BLESerialCommunicator = BLESerialCommunicator.sharedInstance
-        communicator.write("o")
-    }
     
     // MARK: - Utility -
     func dispatch_async_main(block: () -> ()) {

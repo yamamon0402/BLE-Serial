@@ -150,15 +150,7 @@ SWIFT_CLASS("_TtC6Client10BLEManager")
 @property (nonatomic) BOOL isScannning;
 + (BLEManager * __nonnull)sharedInstance;
 - (SWIFT_NULLABILITY(nonnull) instancetype)init OBJC_DESIGNATED_INITIALIZER;
-
-/// デバイスを探す。終わったらstopScanをセットで呼ぶ
-///
-/// <dl><dt>return</dt><dd><p>scanに成功したか</p></dd></dl>
-/// \param uuid そのuuidのデバイス（ペリフェラル）を探す。空文字を渡すと全てのデバイスをスキャンする
 - (BOOL)scanDevices:(NSString * __nonnull)uuid;
-
-/// デバイスのスキャンを止める。
-/// scanDevicesとセットで必ず呼ぶ。
 - (void)stopScan;
 - (BLEDevice * __nullable)connect:(NSString * __nonnull)uuid;
 - (BOOL)disconnect:(NSString * __nonnull)uuid;
@@ -190,13 +182,13 @@ SWIFT_CLASS("_TtC6Client21BLESerialCommunicator")
 
 SWIFT_CLASS("_TtC6Client17TopViewController")
 @interface TopViewController : UIViewController
+@property (nonatomic) NSInteger counter;
 - (void)viewDidLoad;
 - (void)viewDidDisappear:(BOOL)animated;
 - (void)didReceiveMemoryWarning;
-- (IBAction)prev:(id __nonnull)sender;
-- (IBAction)back:(id __nonnull)sender;
-- (IBAction)rotate:(id __nonnull)sender;
-- (IBAction)stop:(id __nonnull)sender;
+- (IBAction)connect:(id __nonnull)sender;
+- (IBAction)disconnect:(id __nonnull)sender;
+- (IBAction)send:(id __nonnull)sender;
 - (void)dispatch_async_main:(void (^ __nonnull)(void))block;
 - (SWIFT_NULLABILITY(nonnull) instancetype)initWithNibName:(NSString * __nullable)nibNameOrNil bundle:(NSBundle * __nullable)nibBundleOrNil OBJC_DESIGNATED_INITIALIZER;
 - (SWIFT_NULLABILITY(nonnull) instancetype)initWithCoder:(NSCoder * __nonnull)aDecoder OBJC_DESIGNATED_INITIALIZER;
