@@ -44,11 +44,11 @@ class BLEManager: NSObject,CBCentralManagerDelegate {
     {
         if centralManager.state == CBCentralManagerState.PoweredOn
         {
-            var services :NSArray! = nil
+            var services :NSArray? = nil
             if(uuid != "")
             {
-                services = NSArray(object: CBUUID(string: uuid))
-                centralManager.scanForPeripheralsWithServices(services, options: nil)
+                services = NSArray(object: CBUUID(string: uuid as String))
+                centralManager.scanForPeripheralsWithServices(services as! [AnyObject], options: nil)
             }
             else
             {
@@ -87,29 +87,29 @@ class BLEManager: NSObject,CBCentralManagerDelegate {
             for device in devices
             {
                 // peripheralのservicesか、disccaver時のadvDataからservicesを取得
-                var services = (device as BLEDevice).peripheral.services
+                var services = (device as! BLEDevice).peripheral.services
                 
                 if services == nil
                 {
-                    services = (device as BLEDevice).serviceUUIDs
+                    services = (((device as! BLEDevice) as BLEDevice).serviceUUIDs) as! [AnyObject]
                 }
                 println("\(services) , \(uuid)")
-                if (services as NSArray).containsObject(CBUUID(string: uuid))
+                if (services as NSArray).containsObject(CBUUID(string: uuid as String))
                 {
-                    centralManager.connectPeripheral((device as BLEDevice).peripheral, options: nil)
+                    centralManager.connectPeripheral((device as! BLEDevice).peripheral, options: nil)
                     println("connect \(uuid)")
                     var counter = 0
-                    while (device as BLEDevice).state == CBPeripheralState.Disconnected
+                    while (device as! BLEDevice).state == CBPeripheralState.Disconnected
                     {
                         NSRunLoop.currentRunLoop().runUntilDate(NSDate(timeIntervalSinceNow: 0.1))
                         if timeOutCount < counter
                         {
-                            centralManager.cancelPeripheralConnection((device as BLEDevice).peripheral)
+                            centralManager.cancelPeripheralConnection((device as! BLEDevice).peripheral)
                             return nil //タイムアウト
                         }
                         counter += 1
                     }
-                    return (device as BLEDevice) // 待った後、state がconnectに変わっていたら、true
+                    return (device as! BLEDevice) // 待った後、state がconnectに変わっていたら、true
                 }
             }
         }
@@ -123,20 +123,20 @@ class BLEManager: NSObject,CBCentralManagerDelegate {
         {
             for device in devices
             {
-                if var services = (device as BLEDevice).serviceUUIDs // optional bindingを使っておく
+                if var services = (device as! BLEDevice).serviceUUIDs // optional bindingを使っておく
                 {
-                    if (services as NSArray).containsObject(CBUUID(string: uuid))
+                    if (services as NSArray).containsObject(CBUUID(string: uuid as String))
                     {
-                        centralManager.connectPeripheral((device as BLEDevice).peripheral, options: nil)
+                        centralManager.connectPeripheral((device as! BLEDevice).peripheral, options: nil)
                         
                         var counter = 0
-                        while (device as BLEDevice).state == CBPeripheralState.Connected ||
-                            (device as BLEDevice).state == CBPeripheralState.Connecting
+                        while (device as! BLEDevice).state == CBPeripheralState.Connected ||
+                            (device as! BLEDevice).state == CBPeripheralState.Connecting
                         {
                             NSRunLoop.currentRunLoop().runUntilDate(NSDate(timeIntervalSinceNow: 0.1))
                             if timeOutCount < counter
                             {
-                                centralManager.cancelPeripheralConnection((device as BLEDevice).peripheral)
+                                centralManager.cancelPeripheralConnection((device as! BLEDevice).peripheral)
                                 return false //タイムアウト
                             }
                             counter += 1
@@ -166,7 +166,7 @@ class BLEManager: NSObject,CBCentralManagerDelegate {
             var counter : Int = 0
             for device in devices
             {
-                if (device as BLEDevice).identifier == peripheral.identifier.UUIDString
+                if (device as! BLEDevice).identifier == peripheral.identifier.UUIDString
                 {
                     // 同じidのが先にいたら、それを消して入れ替える
                     devices.removeObjectAtIndex(counter)
@@ -190,11 +190,11 @@ class BLEManager: NSObject,CBCentralManagerDelegate {
         println("connect success")
         for device in devices
         {
-            if (device as BLEDevice).identifier == peripheral.identifier.UUIDString
+            if (device as! BLEDevice).identifier == peripheral.identifier.UUIDString
             {
-                if (device as BLEDevice).peripheral.services == nil
+                if (device as! BLEDevice).peripheral.services == nil
                 {
-                    (device as BLEDevice).peripheral.discoverServices(nil) //connectされたら早速serviceを探索する
+                    (device as! BLEDevice).peripheral.discoverServices(nil) //connectされたら早速serviceを探索する
                 }
             }
         }

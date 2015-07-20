@@ -125,9 +125,9 @@ class BLEDevice: NSObject , CBPeripheralDelegate {
         self.peripheral = peripheral;
         for service in self.peripheral.services	{
             //サービスが見つかったらすぐにキャラクタリスティックも探す
-            self.peripheral.discoverCharacteristics(nil, forService: service as CBService)
+            self.peripheral.discoverCharacteristics(nil, forService: service as! CBService)
             
-            discoverServiceBlock(service as CBService)
+            discoverServiceBlock(service as! CBService)
         }
         println("discover service")
     }
@@ -150,14 +150,14 @@ class BLEDevice: NSObject , CBPeripheralDelegate {
         {
             for service in services // 高速列挙でキャストする方法ってないのかな？勉強不足
             {
-                println("getch:\((service as CBService).UUID.UUIDString) , \(serviceUUID) , ")
-                if (service as CBService).UUID.UUIDString.lowercaseString == serviceUUID
+                //println("getch:\((service as! CBService).UUID.UUIDString) , \(serviceUUID) , ")
+                if (service as! CBService).UUID.UUIDString.lowercaseString == serviceUUID
                 {
-                    if (service as CBService).characteristics != nil
+                    if (service as! CBService).characteristics != nil
                     {
-                        for characteristic in (service as CBService).characteristics // 高速列挙でキャストする方法ってないのかな？
+                        for characteristic in (service as! CBService).characteristics // 高速列挙でキャストする方法ってないのかな？
                         {
-                            if (characteristic as CBCharacteristic).UUID.UUIDString.lowercaseString == CharacteristicUUID
+                            if (characteristic as! CBCharacteristic).UUID.UUIDString.lowercaseString == CharacteristicUUID
                             {
                                 return characteristic as? CBCharacteristic;
                             }

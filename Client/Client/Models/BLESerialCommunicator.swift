@@ -55,7 +55,7 @@ class BLESerialCommunicator: NSObject {
                     for ch in (service as CBService).characteristics
                     {
                         var tx : CBCharacteristic? = (device as BLEDevice).getCharacteristic(self.UUID_VSP_SERVICE, CharacteristicUUID: self.UUID_TX)
-                        if (ch as CBCharacteristic) == tx
+                        if (ch as! CBCharacteristic) == tx
                         {
                             (device as BLEDevice).notifyRequest(tx!)
                         }
@@ -75,7 +75,7 @@ class BLESerialCommunicator: NSObject {
                     {
                         if tx?.value != nil
                         {
-                            var source : String = NSString(data:(tx?.value)! , encoding:NSUTF8StringEncoding)!
+                            var source : String = NSString(data:(tx?.value)! , encoding:NSUTF8StringEncoding) as String!
                             println("\(source)")
                             self.readBlock(source)
                         }
