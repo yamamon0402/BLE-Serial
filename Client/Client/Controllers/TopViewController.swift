@@ -21,7 +21,21 @@ class TopViewController: UIViewController{
         communicator.readBlock = {string in
             self.dispatch_async_main
                 {
-                    println(string)
+                    let loc_string : NSString = string as NSString
+                    let searchRight : NSRange = loc_string.rangeOfString("r:")
+                    let searchLeft : NSRange = loc_string.rangeOfString(",l:")
+                    if(searchRight.location == NSNotFound || searchLeft.location == NSNotFound || searchRight.location != 0)
+                    {
+                        println("missData");
+                    }
+                    else
+                    {
+                        var r :NSString = loc_string.substringWithRange(NSMakeRange(searchRight.location + 2 , searchLeft.location - (searchRight.location + 2)))
+                        self.rightSlider.value = r.floatValue
+                        
+                        var l :NSString = loc_string.substringWithRange(NSMakeRange(searchLeft.location + 3 , loc_string.length - (searchLeft.location + 3)))
+                        self.leftSlider.value = l.floatValue
+                    }
             }
         }
     }
